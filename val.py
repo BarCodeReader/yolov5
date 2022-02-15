@@ -39,9 +39,13 @@ def save_one_txt(predn, save_conf, shape, file):
     gn = torch.tensor(shape)[[1, 0, 1, 0]]  # normalization gain whwh
     for *xyxy, conf, cls in predn.tolist():
         xywh = (xyxy2xywh(torch.tensor(xyxy).view(1, 4)) / gn).view(-1).tolist()  # normalized xywh
-        line = (cls, *xywh, conf) if save_conf else (cls, *xywh)  # label format
+        #print('----xywh:',xywh)
+        line = (cls, conf, *xywh) if save_conf else (cls, *xywh)  # label format
+        #print('----line:', line)
         with open(file, 'a') as f:
-            f.write(('%g ' * len(line)).rstrip() % line + '\n')
+            msg = ('%g ' * len(line)).rstrip() % line + '\n'
+            #print('----msg', msg)
+            f.write(msg)
 
 
 def save_one_json(predn, jdict, path, class_map):
@@ -213,10 +217,12 @@ def run(data,
                 pred[:, 5] = 0
             predn = pred.clone()
             scale_coords(img[si].shape[1:], predn[:, :4], shape, shapes[si][1])  # native-space pred
+            #print('----predn: {}, in wh: {},{}'.format(predn, predn[0][2]-predn[0][0], predn[0][3]-predn[0][1]))
 
             # Evaluate
             if nl:
                 tbox = xywh2xyxy(labels[:, 1:5])  # target boxes
+                #print('----tbox: {}, in wh: {},{}'.format(tbox, tbox[0][2]-tbox[0][0], tbox[0][3]-tbox[0][1]))
                 scale_coords(img[si].shape[1:], tbox, shape, shapes[si][1])  # native-space labels
                 labelsn = torch.cat((labels[:, 0:1], tbox), 1)  # native-space labels
                 correct = process_batch(predn, labelsn, iouv)
