@@ -262,7 +262,7 @@ def run(data,
     # save results
     ppf = '%20s' + '%11s' * 2 + '%11.3s' * 4  # print format
     with open("{}/eval_results.txt".format(project), 'a') as f:
-        f.write(ppf % (test_scene, '|', '', 'P', 'R', 'mAP50', 'mAP95')+'\n')
+        f.write(ppf % (test_scene, '|', '|', 'P', 'R', 'mAP50', 'mAP95')+'\n')
         f.write(pf % ('all', seen, nt.sum(), mp, mr, map50, map)+'\n\n')
     print("evalation results saved to txt")
 

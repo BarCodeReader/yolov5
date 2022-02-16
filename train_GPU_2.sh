@@ -5,5 +5,5 @@ python train.py \
 --project "./runs/Garbage_yolov5s_attn_with_sewage_ar0005_aug_$(date +"%d-%m-%Y")" \
 --batch-size 16 \
 --imgsz 512 \
---epochs 100 \
+--epochs 80 \
 --device 2
